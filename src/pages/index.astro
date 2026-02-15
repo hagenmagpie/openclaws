@@ -1,0 +1,293 @@
+---
+import { mirrors, scenarios } from '../config/mirrors';
+---
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>爪子星球 - OpenClaw 发行版</title>
+    <meta name="description" content="爪子星球 - 极客风格的 OpenClaw 多能力集合门户" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'SF Mono', 'Fira Code', 'Monaco', monospace;
+        background: #0a0a0f;
+        color: #e0e0e0;
+        min-height: 100vh;
+      }
+      .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+      
+      /* Header */
+      header {
+        text-align: center;
+        padding: 3rem 0;
+        border-bottom: 1px solid #1a1a2e;
+      }
+      .logo {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+      }
+      .tagline {
+        color: #666;
+        font-size: 0.9rem;
+      }
+      
+      /* Filters */
+      .filters {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background: #12121a;
+        border: 1px solid #1a1a2e;
+        border-radius: 8px;
+      }
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .filter-group label {
+        font-size: 0.75rem;
+        color: #888;
+        text-transform: uppercase;
+      }
+      .filter-group select {
+        padding: 0.5rem 1rem;
+        background: #0a0a0f;
+        border: 1px solid #2a2a3e;
+        color: #e0e0e0;
+        border-radius: 4px;
+        font-family: inherit;
+        cursor: pointer;
+      }
+      .filter-group select:focus {
+        outline: none;
+        border-color: #00ff88;
+      }
+      
+      /* Cards Grid */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+      .card {
+        background: #12121a;
+        border: 1px solid #1a1a2e;
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.2s;
+      }
+      .card:hover {
+        border-color: #00ff88;
+        transform: translateY(-2px);
+      }
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .card-title {
+        font-size: 1.1rem;
+        color: #fff;
+      }
+      .card-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+      }
+      .badge-windows { background: #0078d4; }
+      .badge-linux { background: #e95420; }
+      .badge-macos { background: #333; }
+      
+      .card-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.8rem;
+        color: #666;
+        margin-bottom: 1rem;
+      }
+      .card-desc {
+        font-size: 0.9rem;
+        color: #aaa;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+      .card-skills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .skill-tag {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+        background: #1a1a2e;
+        border-radius: 3px;
+        color: #00ff88;
+      }
+      .download-btn {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        background: #00ff88;
+        color: #0a0a0f;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        transition: opacity 0.2s;
+      }
+      .download-btn:hover {
+        opacity: 0.8;
+      }
+      
+      /* Footer */
+      footer {
+        text-align: center;
+        padding: 3rem 0;
+        margin-top: 3rem;
+        border-top: 1px solid #1a1a2e;
+        color: #444;
+        font-size: 0.8rem;
+      }
+      footer a { color: #00ff88; }
+      
+      /* Empty state */
+      .empty {
+        text-align: center;
+        padding: 4rem;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">🪐 爪子星球</div>
+        <p class="tagline">OpenClaw 发行版 | 开机即用的智能助手</p>
+      </header>
+
+      <div class="filters">
+        <div class="filter-group">
+          <label>操作系统</label>
+          <select id="osFilter">
+            <option value="">全部</option>
+            <option value="windows">Windows</option>
+            <option value="linux">Linux</option>
+            <option value="macos">macOS</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>硬件架构</label>
+          <select id="archFilter">
+            <option value="">全部</option>
+            <option value="x64">x64 (Intel/AMD)</option>
+            <option value="arm64">ARM64 (Apple Silicon)</option>
+            <option value="arm32">ARM32 (Raspberry Pi)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>使用场景</label>
+          <select id="scenarioFilter">
+            <option value="">全部</option>
+            {scenarios.map(s => (
+              <option value={s.id}>{s.name}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div class="grid" id="mirrorGrid">
+        {mirrors.map(mirror => (
+          <div class="card" data-os={mirror.os} data-arch={mirror.arch} data-skills={mirror.skills.join(',')}>
+            <div class="card-header">
+              <span class="card-title">{mirror.name}</span>
+              <span class={`card-badge badge-${mirror.os}`}>{mirror.os}</span>
+            </div>
+            <div class="card-meta">
+              <span>📦 {mirror.version}</span>
+              <span>💾 {mirror.size}</span>
+              <span>🔧 {mirror.arch}</span>
+            </div>
+            <p class="card-desc">{mirror.description}</p>
+            <div class="card-skills">
+              {mirror.skills.map(skill => (
+                <span class="skill-tag">{skill}</span>
+              ))}
+            </div>
+            <a href={mirror.url} class="download-btn" target="_blank">
+              ⬇️ 下载镜像
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <div class="empty" id="emptyState" style="display: none;">
+        没有找到匹配的镜像，请尝试其他筛选条件
+      </div>
+
+      <footer>
+        <p>🦞 Powered by <a href="https://openclaw.ai" target="_blank">OpenClaw</a></p>
+        <p>📂 <a href="https://github.com/hagenmagpie/openclaws" target="_blank">GitHub</a></p>
+      </footer>
+    </div>
+
+    <script>
+      const osFilter = document.getElementById('osFilter');
+      const archFilter = document.getElementById('archFilter');
+      const scenarioFilter = document.getElementById('scenarioFilter');
+      const cards = document.querySelectorAll('.card');
+      const emptyState = document.getElementById('emptyState');
+
+      const scenarioSkills: Record<string, string[]> = {
+        'smart-home': ['homeassistant', 'nodes'],
+        'office': ['feishu-doc', 'feishu-wiki', 'feishu-drive'],
+        'automation': ['cron', 'weather', 'memory'],
+        'iot': ['nodes', 'homeassistant', 'weather'],
+        'monitor': ['nodes', 'camera'],
+      };
+
+      function filterCards() {
+        const os = osFilter.value;
+        const arch = archFilter.value;
+        const scenario = scenarioFilter.value;
+        
+        let visibleCount = 0;
+        
+        cards.forEach(card => {
+          const cardOs = card.getAttribute('data-os');
+          const cardArch = card.getAttribute('data-arch');
+          const cardSkills = card.getAttribute('data-skills') || '';
+          
+          let show = true;
+          
+          if (os && cardOs !== os) show = false;
+          if (arch && cardArch !== arch) show = false;
+          
+          if (scenario) {
+            const neededSkills = scenarioSkills[scenario] || [];
+            const hasSkill = neededSkills.some(s => cardSkills.includes(s));
+            if (!hasSkill) show = false;
+          }
+          
+          (card as HTMLElement).style.display = show ? 'block' : 'none';
+          if (show) visibleCount++;
+        });
+        
+        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+
+      osFilter.addEventListener('change', filterCards);
+      archFilter.addEventListener('change', filterCards);
+      scenarioFilter.addEventListener('change', filterCards);
+    </script>
+  </body>
+</html>
