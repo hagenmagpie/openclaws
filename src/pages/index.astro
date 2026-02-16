@@ -223,9 +223,15 @@ import { mirrors, scenarios } from '../config/mirrors';
                 <span class="skill-tag">{skill}</span>
               ))}
             </div>
-            <a href={mirror.url} class="download-btn" target="_blank">
-              ⬇️ 下载镜像
-            </a>
+            {mirror.url.includes('你的网盘地址') || mirror.url.includes('建设中') ? (
+              <span class="download-btn" style="background: #2a2a3e; color: #666; cursor: default;">
+                🚧 建设中…
+              </span>
+            ) : (
+              <a href={mirror.url} class="download-btn" target="_blank">
+                ⬇️ 下载镜像
+              </a>
+            )}
           </div>
         ))}
       </div>
