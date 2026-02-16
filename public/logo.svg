@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <!-- 星球背景 -->
+  <defs>
+    <radialGradient id="planetGrad" cx="40%" cy="40%">
+      <stop offset="0%" stop-color="#1a2a4a"/>
+      <stop offset="100%" stop-color="#0d1525"/>
+    </radialGradient>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3a5a8a" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#6a8aaa" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#3a5a8a" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- 星球 -->
+  <circle cx="200" cy="220" r="90" fill="url(#planetGrad)"/>
+  <ellipse cx="200" cy="220" rx="130" ry="25" fill="none" stroke="url(#ringGrad)" stroke-width="4" transform="rotate(-20 200 220)"/>
+  
+  <!-- 星球表面纹理 -->
+  <circle cx="160" cy="190" r="8" fill="#2a4a6a" opacity="0.5"/>
+  <circle cx="230" cy="240" r="12" fill="#2a4a6a" opacity="0.4"/>
+  <circle cx="180" cy="260" r="6" fill="#2a4a6a" opacity="0.3"/>
+  
+  <!-- 红色龙虾 (左下) -->
+  <g transform="translate(80, 280)">
+    <!-- 身体 -->
+    <ellipse cx="0" cy="0" rx="22" ry="28" fill="#e74c3c"/>
+    <!-- 尾巴 -->
+    <path d="M-12 25 Q0 40 12 25" fill="#c0392b"/>
+    <!-- 眼睛 -->
+    <circle cx="-8" cy="-15" r="4" fill="#fff"/>
+    <circle cx="8" cy="-15" r="4" fill="#fff"/>
+    <circle cx="-8" cy="-15" r="2" fill="#000"/>
+    <circle cx="8" cy="-15" r="2" fill="#000"/>
+    <!-- 左钳子 (举起) -->
+    <path d="M-20 -10 Q-45 -50 -30 -70 Q-20 -60 -15 -40" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+    <path d="M-30 -70 L-40 -85 M-30 -70 L-25 -88 M-30 -70 L-35 -90" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
+    <!-- 右钳子 (举起) -->
+    <path d="M20 -10 Q45 -50 30 -70 Q20 -60 15 -40" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+    <path d="M30 -70 L40 -85 M30 -70 L25 -88 M30 -70 L35 -90" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
+    <!-- 腿 -->
+    <path d="M-15 20 L-25 35 M-10 22 L-15 38 M10 22 L15 38 M15 20 L25 35" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  
+  <!-- 橙色龙虾 (顶部) -->
+  <g transform="translate(200, 120)">
+    <!-- 身体 -->
+    <ellipse cx="0" cy="0" rx="20" ry="26" fill="#e67e22"/>
+    <!-- 尾巴 -->
+    <path d="M-10 23 Q0 36 10 23" fill="#d35400"/>
+    <!-- 眼睛 -->
+    <circle cx="-7" cy="-14" r="3.5" fill="#fff"/>
+    <circle cx="7" cy="-14" r="3.5" fill="#fff"/>
+    <circle cx="-7" cy="-14" r="1.8" fill="#000"/>
+    <circle cx="7" cy="-14" r="1.8" fill="#000"/>
+    <!-- 左钳子 (举起) -->
+    <path d="M-18 -9 Q-40 -45 -28 -62 Q-18 -54 -13 -36" fill="#e67e22" stroke="#d35400" stroke-width="2"/>
+    <path d="M-28 -62 L-36 -75 M-28 -62 L-23 -77 M-28 -62 L-30 -78" stroke="#d35400" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- 右钳子 (举起) -->
+    <path d="M18 -9 Q40 -45 28 -62 Q18 -54 13 -36" fill="#e67e22" stroke="#d35400" stroke-width="2"/>
+    <path d="M28 -62 L36 -75 M28 -62 L23 -77 M28 -62 L30 -78" stroke="#d35400" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- 腿 -->
+    <path d="M-12 18 L-20 32 M-8 20 L-12 35 M8 20 L12 35 M12 18 L20 32" stroke="#d35400" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  
+  <!-- 蓝色龙虾 (右下) -->
+  <g transform="translate(320, 280)">
+    <!-- 身体 -->
+    <ellipse cx="0" cy="0" rx="22" ry="28" fill="#3498db"/>
+    <!-- 尾巴 -->
+    <path d="M-12 25 Q0 40 12 25" fill="#2980b9"/>
+    <!-- 眼睛 -->
+    <circle cx="-8" cy="-15" r="4" fill="#fff"/>
+    <circle cx="8" cy="-15" r="4" fill="#fff"/>
+    <circle cx="-8" cy="-15" r="2" fill="#000"/>
+    <circle cx="8" cy="-15" r="2" fill="#000"/>
+    <!-- 左钳子 (举起) -->
+    <path d="M-20 -10 Q-45 -50 -30 -70 Q-20 -60 -15 -40" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+    <path d="M-30 -70 L-40 -85 M-30 -70 L-25 -88 M-30 -70 L-35 -90" stroke="#2980b9" stroke-width="3" stroke-linecap="round"/>
+    <!-- 右钳子 (举起) -->
+    <path d="M20 -10 Q45 -50 30 -70 Q20 -60 15 -40" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+    <path d="M30 -70 L40 -85 M30 -70 L25 -88 M30 -70 L35 -90" stroke="#2980b9" stroke-width="3" stroke-linecap="round"/>
+    <!-- 腿 -->
+    <path d="M-15 20 L-25 35 M-10 22 L-15 38 M10 22 L15 38 M15 20 L25 35" stroke="#2980b9" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>
