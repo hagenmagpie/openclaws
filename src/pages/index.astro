@@ -1,5 +1,39 @@
 ---
 import { mirrors, scenarios } from '../config/mirrors';
+
+// 简单的 Markdown 渲染函数
+function renderMarkdown(text: string): string {
+  if (!text) return '';
+  
+  // 转义 HTML
+  let html = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  
+  // 代码块
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+  
+  // 行内代码
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  
+  // 标题
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  
+  // 粗体
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  
+  // 列表
+  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+  
+  // 分割线
+  html = html.replace(/^---$/gm, '<hr>');
+  
+  // 换行
+  html = html.replace(/\n\n/g, '</p><p>');
+  html = html.replace(/\n/g, '<br>');
+  
+  return '<p>' + html + '</p>';
+}
 ---
 
 <html lang="zh-CN">
@@ -144,9 +178,96 @@ import { mirrors, scenarios } from '../config/mirrors';
         font-weight: bold;
         font-size: 0.9rem;
         transition: opacity 0.2s;
+        margin-top: 0.75rem;
       }
       .download-btn:hover {
         opacity: 0.8;
+      }
+      
+      /* Deploy Guide Button */
+      .deploy-btn {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        background: #1a1a2e;
+        color: #00ff88;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        border: 1px solid #00ff88;
+        cursor: pointer;
+      }
+      .deploy-btn:hover {
+        background: #00ff88;
+        color: #0a0a0f;
+      }
+      
+      /* Deploy Guide Panel */
+      .deploy-panel {
+        display: none;
+        margin-top: 0.75rem;
+        padding: 1rem;
+        background: #0a0a0f;
+        border: 1px solid #2a2a3e;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        line-height: 1.6;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      .deploy-panel.open {
+        display: block;
+      }
+      .deploy-panel h2 {
+        font-size: 1rem;
+        color: #00ff88;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #2a2a3e;
+        padding-bottom: 0.5rem;
+      }
+      .deploy-panel h3 {
+        font-size: 0.9rem;
+        color: #fff;
+        margin: 1rem 0 0.5rem;
+      }
+      .deploy-panel p {
+        color: #aaa;
+        margin-bottom: 0.5rem;
+      }
+      .deploy-panel ol, .deploy-panel ul {
+        color: #aaa;
+        padding-left: 1.5rem;
+        margin-bottom: 0.75rem;
+      }
+      .deploy-panel li {
+        margin-bottom: 0.25rem;
+      }
+      .deploy-panel code {
+        background: #1a1a2e;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-size: 0.8rem;
+        color: #f0c040;
+      }
+      .deploy-panel pre {
+        background: #1a1a2e;
+        padding: 0.75rem;
+        border-radius: 4px;
+        overflow-x: auto;
+        margin: 0.5rem 0;
+      }
+      .deploy-panel pre code {
+        background: none;
+        padding: 0;
+        color: #e0e0e0;
+      }
+      .deploy-panel hr {
+        border: none;
+        border-top: 1px solid #2a2a3e;
+        margin: 1rem 0;
       }
       
       /* Footer */
@@ -223,6 +344,12 @@ import { mirrors, scenarios } from '../config/mirrors';
                 <span class="skill-tag">{skill}</span>
               ))}
             </div>
+            <button class="deploy-btn" onclick={`toggleDeployGuide('${mirror.id}')`}>
+              📖 部署教程
+            </button>
+            <div class="deploy-panel" id={`deploy-${mirror.id}`}>
+              <div set:html={renderMarkdown(mirror.deployGuide)} />
+            </div>
             {mirror.url.includes('你的网盘地址') || mirror.url.includes('建设中') ? (
               <span class="download-btn" style="background: #2a2a3e; color: #666; cursor: default;">
                 🚧 建设中…
@@ -247,6 +374,14 @@ import { mirrors, scenarios } from '../config/mirrors';
     </div>
 
     <script>
+      // 部署教程展开/折叠
+      function toggleDeployGuide(id) {
+        const panel = document.getElementById('deploy-' + id);
+        if (panel) {
+          panel.classList.toggle('open');
+        }
+      }
+
       const osFilter = document.getElementById('osFilter');
       const archFilter = document.getElementById('archFilter');
       const scenarioFilter = document.getElementById('scenarioFilter');
