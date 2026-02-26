@@ -1,0 +1,147 @@
+{
+  "updated": "2026-02-26T06:00:00.000Z",
+  "latest": [
+    {
+      "title": "OpenAI Announces GPT-5 Coming Soon",
+      "url": "https://openai.com/blog",
+      "source": "Hacker News",
+      "time": 1708924800000,
+      "score": 256
+    },
+    {
+      "title": "Claude 4 Released with Enhanced Reasoning",
+      "url": "https://anthropic.com",
+      "source": "Hacker News",
+      "time": 1708910400000,
+      "score": 189
+    },
+    {
+      "title": "Google DeepMind Achieves Breakthrough in Protein Folding",
+      "url": "https://deepmind.google",
+      "source": "Hacker News",
+      "time": 1708896000000,
+      "score": 312
+    },
+    {
+      "title": "Microsoft Copilot Gets Major Update",
+      "url": "https://microsoft.com",
+      "source": "Reddit AI",
+      "time": 1708881600000,
+      "score": 145
+    },
+    {
+      "title": "AI Agents: The Next Frontier in LLM Development",
+      "url": "https://example.com",
+      "source": "Hacker News",
+      "time": 1708867200000,
+      "score": 198
+    },
+    {
+      "title": "Tesla FSD v13 Released",
+      "url": "https://tesla.com",
+      "source": "Hacker News",
+      "time": 1708852800000,
+      "score": 167
+    },
+    {
+      "title": "Meta Releases LLaMA 4 Open Source",
+      "url": "https://meta.com",
+      "source": "Reddit AI",
+      "time": 1708838400000,
+      "score": 234
+    },
+    {
+      "title": "Stability AI Launches New Image Generator",
+      "url": "https://stability.ai",
+      "source": "Hacker News",
+      "time": 1708824000000,
+      "score": 156
+    },
+    {
+      "title": "Apple Unveils On-Device AI Features",
+      "url": "https://apple.com",
+      "source": "Hacker News",
+      "time": 1708809600000,
+      "score": 189
+    },
+    {
+      "title": "NVIDIA Announces New AI Chip Architecture",
+      "url": "https://nvidia.com",
+      "source": "Reddit AI",
+      "time": 1708795200000,
+      "score": 267
+    }
+  ],
+  "hot": [
+    {
+      "title": "GPT-5 Rumors: What We Know So Far",
+      "url": "https://example.com",
+      "source": "Hacker News",
+      "time": 1708924800000,
+      "score": 542
+    },
+    {
+      "title": "Anthropic Claude 4 vs GPT-4: Benchmark Results",
+      "url": "https://example.com",
+      "source": "Hacker News",
+      "time": 1708910400000,
+      "score": 489
+    },
+    {
+      "title": "The AI Code Assistant Wars: Cursor vs GitHub Copilot",
+      "url": "https://example.com",
+      "source": "Reddit AI",
+      "time": 1708896000000,
+      "score": 423
+    },
+    {
+      "title": "Is AI Hype Reaching Its Peak?",
+      "url": "https://example.com",
+      "source": "Hacker News",
+      "time": 1708881600000,
+      "score": 387
+    },
+    {
+      "title": "Open Source LLMs Catching Up to GPT-4",
+      "url": "https://example.com",
+      "source": "Hacker News",
+      "time": 1708867200000,
+      "score": 356
+    },
+    {
+      "title": "AI in Healthcare: Real Progress or Hype?",
+      "url": "https://example.com",
+      "source": "Reddit AI",
+      "time": 1708852800000,
+      "score": 312
+    },
+    {
+      "title": "The Economics of Running AI Models",
+      "url": "https://example.com",
+      "source": "Hacker News",
+      "time": 1708838400000,
+      "score": 298
+    },
+    {
+      "title": "AI Regulation: What Developers Need to Know",
+      "url": "https://example.com",
+      "source": "Hacker News",
+      "time": 1708824000000,
+      "score": 276
+    },
+    {
+      "title": "How AI is Transforming Software Development",
+      "url": "https://example.com",
+      "source": "Reddit AI",
+      "time": 1708809600000,
+      "score": 254
+    },
+    {
+      "title": "The Future of AI: Expert Predictions for 2026",
+      "url": "https://example.com",
+      "source": "Hacker News",
+      "time": 1708795200000,
+      "score": 234
+    }
+  ]
+}

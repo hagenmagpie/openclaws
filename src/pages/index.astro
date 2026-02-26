@@ -283,20 +283,9 @@ function renderMarkdown(text: string): string {
         padding: 2rem;
         color: #ff6b6b;
       }
-      .news-refresh {
-        display: inline-block;
-        margin-left: auto;
-        padding: 0.3rem 0.8rem;
+      .news-updated {
         font-size: 0.75rem;
-        background: transparent;
-        border: 1px solid currentColor;
-        border-radius: 4px;
-        color: inherit;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      .news-refresh:hover {
-        background: rgba(255,255,255,0.1);
+        color: #888;
       }
       .news-section-title {
         display: flex;
@@ -321,7 +310,7 @@ function renderMarkdown(text: string): string {
       <div class="news-section">
         <div class="news-section-title">
           <h2>🤖 AI 资讯</h2>
-          <button class="news-refresh" onclick="loadNews()">🔄 刷新</button>
+          <span id="updatedTime" class="news-updated">更新时间: --</span>
         </div>
         
         <!-- Latest AI News -->
@@ -463,67 +452,42 @@ function renderMarkdown(text: string): string {
       archFilter.addEventListener('change', filterCards);
       scenarioFilter.addEventListener('change', filterCards);
 
-      // AI News Fetching
+      // AI News Loading (from static JSON)
       async function fetchAINews() {
-        const news = { latest: [], hot: [] };
+        const news = { latest: [], hot: [], updated: null };
         
         try {
-          // Fetch from Hacker News (AI related)
-          const hnResponse = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json');
-          const hnIds = await hnResponse.json();
-          
-          // Get top 30 stories and filter for AI-related
-          const hnPromises = hnIds.slice(0, 30).map(async (id) => {
-            const storyRes = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);
-            return storyRes.json();
-          });
-          
-          const hnStories = await Promise.all(hnPromises);
-          
-          // Filter AI-related stories
-          const aiKeywords = ['AI', 'artificial intelligence', 'OpenAI', 'GPT', 'Claude', 'Gemini', 'LLM', 'machine learning', 'deep learning', 'neural', 'ChatGPT', 'Anthropic', 'Google AI', 'Meta AI', 'Tesla', '自动驾驶', '大模型', '人工智能'];
-          
-          const aiStories = hnStories.filter((story) => {
-            if (!story || !story.title) return false;
-            const titleLower = story.title.toLowerCase();
-            return aiKeywords.some((k) => titleLower.includes(k.toLowerCase()));
-          });
-          
-          // Split into latest and hot
-          news.latest = aiStories.slice(0, 10).map((story) => ({
-            title: story.title,
-            url: story.url || `https://news.ycombinator.com/item?id=${story.id}`,
-            source: 'Hacker News',
-            time: story.time ? new Date(story.time * 1000) : new Date(),
-            score: story.score || 0
-          }));
-          
-          // Hot = top scored AI stories
-          const hotStories = [...aiStories].sort((a, b) => (b.score || 0) - (a.score || 0));
-          news.hot = hotStories.slice(0, 10).map((story) => ({
-            title: story.title,
-            url: story.url || `https://news.ycombinator.com/item?id=${story.id}`,
-            source: 'Hacker News',
-            time: story.time ? new Date(story.time * 1000) : new Date(),
-            score: story.score || 0
-          }));
-          
+          const response = await fetch('/data/ai-news.json');
+          const data = await response.json();
+          news.latest = data.latest || [];
+          news.hot = data.hot || [];
+          news.updated = data.updated;
         } catch (error) {
-          console.error('Failed to fetch news:', error);
+          console.error('Failed to load news:', error);
         }
         
         return news;
       }
 
-      function timeAgo(date) {
-        const now = new Date();
-        const diff = now.getTime() - date.getTime();
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const days = Math.floor(hours / 24);
-        
-        if (days > 0) return `${days}天前`;
-        if (hours > 0) return `${hours}小时前`;
-        return '刚刚';
+      function formatDate(isoString) {
+        if (!isoString) return '';
+        const date = new Date(isoString);
+        return date.toLocaleString('zh-CN', { 
+          month: 'numeric', 
+          day: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        });
+      }
+
+      function formatNewsTime(timestamp) {
+        const date = new Date(timestamp);
+        return date.toLocaleString('zh-CN', { 
+          month: 'numeric', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
       }
 
       function renderNewsCard(item, type) {
@@ -532,7 +496,7 @@ function renderMarkdown(text: string): string {
             <div class="news-title">${item.title}</div>
             <div class="news-meta">
               <span class="news-source">${item.source}</span>
-              <span class="news-time">${timeAgo(item.time)}${item.score ? ' · ' + item.score + ' ▲' : ''}</span>
+              <span class="news-time">${formatNewsTime(item.time)}${item.score ? ' · ' + item.score + ' ▲' : ''}</span>
             </div>
           </a>
         `;
@@ -541,15 +505,21 @@ function renderMarkdown(text: string): string {
       async function loadNews() {
         const latestContainer = document.getElementById('latestNews');
         const hotContainer = document.getElementById('hotNews');
+        const updatedTime = document.getElementById('updatedTime');
         
         if (latestContainer) latestContainer.innerHTML = '<div class="news-loading">加载中...</div>';
         if (hotContainer) hotContainer.innerHTML = '<div class="news-loading">加载中...</div>';
         
         const news = await fetchAINews();
         
+        // Update timestamp
+        if (updatedTime && news.updated) {
+          updatedTime.textContent = '更新时间: ' + formatDate(news.updated);
+        }
+        
         if (latestContainer) {
           if (news.latest.length > 0) {
-            latestContainer.innerHTML = news.latest.map((item) => renderNewsCard(item, 'latest')).join('');
+            latestContainer.innerHTML = news.latest.slice(0, 10).map((item) => renderNewsCard(item, 'latest')).join('');
           } else {
             latestContainer.innerHTML = '<div class="news-error">暂无最新资讯</div>';
           }
@@ -557,7 +527,7 @@ function renderMarkdown(text: string): string {
         
         if (hotContainer) {
           if (news.hot.length > 0) {
-            hotContainer.innerHTML = news.hot.map((item) => renderNewsCard(item, 'hot')).join('');
+            hotContainer.innerHTML = news.hot.slice(0, 10).map((item) => renderNewsCard(item, 'hot')).join('');
           } else {
             hotContainer.innerHTML = '<div class="news-error">暂无热门资讯</div>';
           }
