@@ -1,363 +1,203 @@
 ---
-import { mirrors, scenarios } from '../config/mirrors';
-
-// 简单的 Markdown 渲染函数
-function renderMarkdown(text: string): string {
-  if (!text) return '';
-  
-  // 转义 HTML
-  let html = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  
-  // 代码块
-  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
-  
-  // 行内代码
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-  
-  // 标题
-  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-  
-  // 粗体
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  
-  // 列表
-  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
-  html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-  
-  // 分割线
-  html = html.replace(/^---$/gm, '<hr>');
-  
-  // 换行
-  html = html.replace(/\n\n/g, '</p><p>');
-  html = html.replace(/\n/g, '<br>');
-  
-  return '<p>' + html + '</p>';
-}
 ---
 
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>爪子星球 - OpenClaw 发行版</title>
-    <meta name="description" content="爪子星球 - 极客风格的 OpenClaw 多能力集合门户" />
+    <title>爪子星球 - AI 资讯</title>
+    <meta name="description" content="爪子星球 - 每日 AI 资讯" />
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
+      @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+      
+      * { margin: 0; padding: 0; box-sizing: border-box; image-rendering: pixelated; }
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background: #fafafa;
-        color: #333;
+        font-family: 'Press Start 2P', 'Courier New', monospace;
+        background: #0a0a0f;
+        color: #e0e0e0;
         min-height: 100vh;
-        font-size: 15px;
-        line-height: 1.5;
+        font-size: 8px;
+        line-height: 1.6;
       }
-      a { color: #0066cc; text-decoration: none; }
-      a:hover { text-decoration: underline; }
-      .container { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
+      a { color: #00ff88; text-decoration: none; }
+      a:hover { color: #00ffcc; }
+      .container { max-width: 900px; margin: 0 auto; padding: 1rem; }
       
       /* Header */
-      header { text-align: center; padding: 2rem 0; }
-      .logo { font-size: 2rem; color: #111; font-weight: 600; letter-spacing: 1px; }
-      .logo span { color: #0066cc; }
-      .tagline { color: #666; font-size: 0.95rem; margin-top: 0.5rem; }
+      header { text-align: center; padding: 1.5rem 0; border-bottom: 4px solid #1a1a2e; }
+      .logo { font-size: 1.2rem; color: #00ff88; margin-bottom: 0.5rem; }
+      .logo span { color: #00bfff; }
+      .tagline { color: #666; font-size: 0.6rem; }
+      .updated { color: #888; font-size: 0.5rem; margin-top: 0.3rem; }
       
       /* Responsive */
       @media (max-width: 768px) {
-        .container { padding: 1rem 0.8rem; }
-        .filters { flex-direction: column; }
-        .filter-group { width: 100%; }
-        .filter-group select { width: 100%; }
-        .grid { grid-template-columns: 1fr; }
-        .news-grid { grid-template-columns: 1fr; }
+        body { font-size: 6px; }
+        .container { padding: 0.6rem; }
+        .news-grid { grid-template-columns: 1fr !important; }
       }
       @media (min-width: 769px) and (max-width: 1024px) {
-        .grid { grid-template-columns: repeat(2, 1fr); }
+        .news-grid { grid-template-columns: repeat(2, 1fr); }
       }
       
-      /* Filters */
-      .filters { display: flex; gap: 0.8rem; flex-wrap: wrap; margin: 1.5rem 0; padding: 1rem; background: #fff; border: 1px solid #eee; border-radius: 8px; }
-      .filter-group { display: flex; flex-direction: column; gap: 0.3rem; flex: 1; min-width: 140px; }
-      .filter-group label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
-      .filter-group select { padding: 0.5rem; background: #fff; border: 1px solid #ddd; border-radius: 4px; color: #333; font-size: 0.9rem; }
-      .filter-group select:focus { outline: none; border-color: #0066cc; }
+      /* News Section */
+      .news-section { margin: 1rem 0; }
+      .news-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        margin: 1.5rem 0 0.8rem;
+        padding-bottom: 0.3rem;
+        border-bottom: 4px solid;
+      }
+      .news-header.latest { border-color: #00bfff; color: #00bfff; }
+      .news-header.hot { border-color: #ff6b6b; color: #ff6b6b; }
+      .news-count { font-size: 0.5rem; color: #666; margin-left: auto; }
       
-      /* Grid */
-      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem; }
-      .card { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 1.2rem; }
-      .card:hover { border-color: #ccc; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-      .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
-      .card-title { font-size: 1.05rem; color: #111; font-weight: 500; }
-      .card-badge { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 3px; background: #f5f5f5; color: #666; }
-      .card-meta { display: flex; gap: 0.8rem; font-size: 0.8rem; color: #888; margin-bottom: 0.6rem; }
-      .card-desc { font-size: 0.9rem; color: #555; margin-bottom: 0.8rem; }
-      .card-skills { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
-      .skill-tag { font-size: 0.75rem; padding: 0.2rem 0.5rem; background: #f0f7ff; color: #0066cc; border-radius: 3px; }
-      .download-btn { display: block; width: 100%; padding: 0.6rem; background: #0066cc; color: #fff; text-align: center; text-decoration: none; font-size: 0.9rem; border-radius: 4px; }
-      .download-btn:hover { background: #0052a3; text-decoration: none; }
+      .news-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 0.8rem;
+      }
+      .news-card {
+        background: #12121a;
+        border: 4px solid #1a1a2e;
+        padding: 0.8rem;
+        text-decoration: none;
+        display: block;
+        transition: all 0.1s;
+      }
+      .news-card:hover {
+        transform: translate(-2px, -2px);
+      }
+      .news-card.latest:hover { border-color: #00bfff; box-shadow: 4px 4px 0 #00bfff; }
+      .news-card.hot:hover { border-color: #ff6b6b; box-shadow: 4px 4px 0 #ff6b6b; }
+      
+      .news-title {
+        font-size: 0.7rem;
+        color: #e0e0e0;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .news-desc {
+        font-size: 0.5rem;
+        color: #888;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .news-meta {
+        font-size: 0.45rem;
+        color: #666;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .news-source { color: #00ff88; }
+      .news-time { color: #666; }
+      .news-score { color: #ff6b6b; }
+      
+      .news-loading {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+        font-size: 0.6rem;
+      }
       
       /* Footer */
-      footer { text-align: center; padding: 2rem 0; margin-top: 2rem; border-top: 1px solid #eee; color: #888; font-size: 0.85rem; }
-      footer a { color: #0066cc; }
-      
-      /* Empty */
-      .empty { text-align: center; padding: 2rem; color: #888; background: #fff; border: 1px solid #eee; border-radius: 8px; }
-      
-      /* News Section */
-      .news-section { margin: 1.5rem 0; }
-      .news-updated { font-size: 0.8rem; color: #888; }
-      .news-header { font-size: 1rem; margin: 1.2rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 2px solid; }
-      .news-header.latest { border-color: #0066cc; color: #0066cc; }
-      .news-header.hot { border-color: #e54d2e; color: #e54d2e; }
-      .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.8rem; margin-bottom: 1rem; }
-      .news-card { background: #fff; border: 1px solid #eee; padding: 0.8rem; border-radius: 6px; text-decoration: none; display: block; }
-      .news-card:hover { border-color: #ccc; }
-      .news-title { font-size: 0.85rem; color: #333; margin-bottom: 0.4rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-      .news-meta { font-size: 0.75rem; color: #888; display: flex; justify-content: space-between; }
-      .news-source { color: #0066cc; }
-      .news-time { color: #888; }
-      .news-loading { text-align: center; padding: 1rem; color: #888; }
-      .news-section-title { display: flex; align-items: center; justify-content: space-between; margin: 1.2rem 0 0.6rem; }
-      .news-section-title h2 { font-size: 0.95rem; margin: 0; color: #111; }
+      footer { text-align: center; padding: 1.5rem 0; margin-top: 2rem; border-top: 4px solid #1a1a2e; color: #444; font-size: 0.5rem; }
+      footer a { color: #00ff88; }
     </style>
   </head>
   <body>
     <div class="container">
       <header>
         <div class="logo">爪子<span>星球</span></div>
-        <p class="tagline">OpenClaw 发行版 · 开机即用的智能助手</p>
+        <p class="tagline">每日 AI 资讯 · 每天 6:00 更新</p>
+        <p class="updated" id="updatedTime"></p>
       </header>
 
-      <!-- AI News Section -->
+      <!-- Latest AI News -->
       <div class="news-section">
-        <div class="news-section-title">
-          <h2>🤖 AI 资讯</h2>
-          <span id="updatedTime" class="news-updated">更新时间: --</span>
-        </div>
-        
-        <!-- Latest AI News -->
         <div class="news-header latest">
           <span>📰 最新 AI 消息</span>
-          <span style="font-size: 0.8rem; color: #888;">今日更新</span>
+          <span class="news-count">20条</span>
         </div>
         <div class="news-grid" id="latestNews">
           <div class="news-loading">加载中...</div>
         </div>
-        
-        <!-- Hot AI News -->
+      </div>
+      
+      <!-- Hot AI News -->
+      <div class="news-section">
         <div class="news-header hot">
           <span>🔥 最热 AI 消息</span>
-          <span style="font-size: 0.8rem; color: #888;">热门排行</span>
+          <span class="news-count">20条</span>
         </div>
         <div class="news-grid" id="hotNews">
           <div class="news-loading">加载中...</div>
         </div>
       </div>
 
-      <div class="filters">
-        <div class="filter-group">
-          <label>操作系统</label>
-          <select id="osFilter">
-            <option value="">全部</option>
-            <option value="windows">Windows</option>
-            <option value="linux">Linux</option>
-            <option value="macos">macOS</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label>硬件架构</label>
-          <select id="archFilter">
-            <option value="">全部</option>
-            <option value="x64">x64 (Intel/AMD)</option>
-            <option value="arm64">ARM64 (Apple Silicon)</option>
-            <option value="arm32">ARM32 (Raspberry Pi)</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label>使用场景</label>
-          <select id="scenarioFilter">
-            <option value="">全部</option>
-            {scenarios.map(s => (
-              <option value={s.id}>{s.name}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div class="grid" id="mirrorGrid">
-        {mirrors.map(mirror => (
-          <div class="card" data-os={mirror.os} data-arch={mirror.arch} data-skills={mirror.skills.join(',')}>
-            <div class="card-header">
-              <span class="card-title">{mirror.name}</span>
-              <span class={`card-badge badge-${mirror.os}`}>{mirror.os}</span>
-            </div>
-            <div class="card-meta">
-              <span>📦 {mirror.version}</span>
-              <span>💾 {mirror.size}</span>
-              <span>🔧 {mirror.arch}</span>
-            </div>
-            <p class="card-desc">{mirror.description}</p>
-            <div class="card-skills">
-              {mirror.skills.map(skill => (
-                <span class="skill-tag">{skill}</span>
-              ))}
-            </div>
-            {mirror.url.includes('你的网盘地址') || mirror.url.includes('建设中') ? (
-              <span class="download-btn" style="background: #2a2a3e; color: #666; cursor: default;">
-                🚧 建设中…
-              </span>
-            ) : (
-              <a href={mirror.url} class="download-btn" target="_blank">
-                ⬇️ 下载镜像
-              </a>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <div class="empty" id="emptyState" style="display: none;">
-        没有找到匹配的镜像，请尝试其他筛选条件
-      </div>
-
       <footer>
         <p>🦞 Powered by <a href="https://openclaw.ai" target="_blank">OpenClaw</a></p>
-        <p>📂 <a href="https://github.com/hagenmagpie/openclaws" target="_blank">GitHub</a></p>
       </footer>
     </div>
 
     <script>
-      const osFilter = document.getElementById('osFilter');
-      const archFilter = document.getElementById('archFilter');
-      const scenarioFilter = document.getElementById('scenarioFilter');
-      const cards = document.querySelectorAll('.card');
-      const emptyState = document.getElementById('emptyState');
-
-      const scenarioSkills: Record<string, string[]> = {
-        'smart-home': ['homeassistant', 'nodes'],
-        'office': ['feishu-doc', 'feishu-wiki', 'feishu-drive'],
-        'automation': ['cron', 'weather', 'memory'],
-        'iot': ['nodes', 'homeassistant', 'weather'],
-        'monitor': ['nodes', 'camera'],
-      };
-
-      function filterCards() {
-        const os = osFilter.value;
-        const arch = archFilter.value;
-        const scenario = scenarioFilter.value;
-        
-        let visibleCount = 0;
-        
-        cards.forEach(card => {
-          const cardOs = card.getAttribute('data-os');
-          const cardArch = card.getAttribute('data-arch');
-          const cardSkills = card.getAttribute('data-skills') || '';
-          
-          let show = true;
-          
-          if (os && cardOs !== os) show = false;
-          if (arch && cardArch !== arch) show = false;
-          
-          if (scenario) {
-            const neededSkills = scenarioSkills[scenario] || [];
-            const hasSkill = neededSkills.some(s => cardSkills.includes(s));
-            if (!hasSkill) show = false;
-          }
-          
-          (card as HTMLElement).style.display = show ? 'block' : 'none';
-          if (show) visibleCount++;
-        });
-        
-        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
-      }
-
-      osFilter.addEventListener('change', filterCards);
-      archFilter.addEventListener('change', filterCards);
-      scenarioFilter.addEventListener('change', filterCards);
-
-      // AI News Loading (from static JSON)
+      // AI News Loading
       async function fetchAINews() {
-        const news = { latest: [], hot: [], updated: null };
-        
         try {
-          const response = await fetch('/openclaws/data/ai-news.json');
-          const data = await response.json();
-          news.latest = data.latest || [];
-          news.hot = data.hot || [];
-          news.updated = data.updated;
-        } catch (error) {
-          console.error('Failed to load news:', error);
-        }
-        
-        return news;
-      }
-
-      function formatDate(isoString) {
-        if (!isoString) return '';
-        const date = new Date(isoString);
-        return date.toLocaleString('zh-CN', { 
-          month: 'numeric', 
-          day: 'numeric', 
-          hour: '2-digit', 
-          minute: '2-digit' 
-        });
-      }
-
-      function formatNewsTime(timestamp) {
-        const date = new Date(timestamp);
-        return date.toLocaleString('zh-CN', { 
-          month: 'numeric', 
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-      }
-
-      function renderNewsCard(item, type) {
-        return `
-          <a href="${item.url}" target="_blank" class="news-card ${type}">
-            <div class="news-title">${item.title}</div>
-            <div class="news-meta">
-              <span class="news-source">${item.source}</span>
-              <span class="news-time">${formatNewsTime(item.time)}${item.score ? ' · ' + item.score + ' ▲' : ''}</span>
-            </div>
-          </a>
-        `;
-      }
-
-      async function loadNews() {
-        const latestContainer = document.getElementById('latestNews');
-        const hotContainer = document.getElementById('hotNews');
-        const updatedTime = document.getElementById('updatedTime');
-        
-        if (latestContainer) latestContainer.innerHTML = '<div class="news-loading">加载中...</div>';
-        if (hotContainer) hotContainer.innerHTML = '<div class="news-loading">加载中...</div>';
-        
-        const news = await fetchAINews();
-        
-        // Update timestamp
-        if (updatedTime && news.updated) {
-          updatedTime.textContent = '更新时间: ' + formatDate(news.updated);
-        }
-        
-        if (latestContainer) {
-          if (news.latest.length > 0) {
-            latestContainer.innerHTML = news.latest.slice(0, 10).map((item) => renderNewsCard(item, 'latest')).join('');
-          } else {
-            latestContainer.innerHTML = '<div class="news-error">暂无最新资讯</div>';
+          const res = await fetch('/openclaws/data/ai-news.json');
+          const data = await res.json();
+          
+          // Update time
+          const timeEl = document.getElementById('updatedTime');
+          if (timeEl && data.updated) {
+            const d = new Date(data.updated);
+            timeEl.textContent = '更新时间: ' + d.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
           }
-        }
-        
-        if (hotContainer) {
-          if (news.hot.length > 0) {
-            hotContainer.innerHTML = news.hot.slice(0, 10).map((item) => renderNewsCard(item, 'hot')).join('');
-          } else {
-            hotContainer.innerHTML = '<div class="news-error">暂无热门资讯</div>';
+          
+          const formatTime = (ts) => {
+            const d = new Date(ts);
+            return d.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+          };
+          
+          const renderCard = (item, type) => `
+            <a href="${item.url}" target="_blank" class="news-card ${type}">
+              <div class="news-title">${item.title}</div>
+              ${item.desc ? `<div class="news-desc">${item.desc}</div>` : ''}
+              <div class="news-meta">
+                <span class="news-source">${item.source}</span>
+                <span class="news-time">${formatTime(item.time)}</span>
+                ${item.score ? `<span class="news-score">▲${item.score}</span>` : ''}
+              </div>
+            </a>
+          `;
+          
+          const latestContainer = document.getElementById('latestNews');
+          const hotContainer = document.getElementById('hotNews');
+          
+          if (latestContainer && data.latest) {
+            latestContainer.innerHTML = data.latest.slice(0, 20).map(item => renderCard(item, 'latest')).join('');
           }
+          if (hotContainer && data.hot) {
+            hotContainer.innerHTML = data.hot.slice(0, 20).map(item => renderCard(item, 'hot')).join('');
+          }
+        } catch (e) {
+          console.error('Failed to load news:', e);
         }
       }
-
-      // Load news on page load
-      loadNews();
+      
+      fetchAINews();
     </script>
   </body>
 </html>
