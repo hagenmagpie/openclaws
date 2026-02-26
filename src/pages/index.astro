@@ -457,7 +457,7 @@ function renderMarkdown(text: string): string {
         const news = { latest: [], hot: [], updated: null };
         
         try {
-          const response = await fetch('/data/ai-news.json');
+          const response = await fetch('/openclaws/data/ai-news.json');
           const data = await response.json();
           news.latest = data.latest || [];
           news.hot = data.hot || [];
