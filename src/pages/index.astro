@@ -60,15 +60,13 @@ function renderMarkdown(text: string): string {
       
       /* Header */
       header { text-align: center; padding: 1rem 0; border-bottom: 1px solid #30363d; }
-      .logo-img { width: 300px; height: auto; }
-      .tagline { color: #8b949e; font-size: 1rem; margin-top: 0.3rem; }
-      .ascii-header { color: #238636; font-size: 0.45rem; line-height: 1.2; white-space: pre; overflow-x: auto; }
+      .logo { font-size: 1.8rem; color: #238636; font-weight: bold; letter-spacing: 2px; }
+      .logo span { color: #58a6ff; }
       
       /* Responsive */
       @media (max-width: 768px) {
         body { font-size: 16px; }
         .container { padding: 0.5rem; }
-        .ascii-header { font-size: 0.28rem; }
         .tagline { font-size: 0.85rem; }
         .filters { flex-direction: column; gap: 0.5rem; padding: 0.6rem; }
         .filter-group { width: 100%; }
@@ -138,15 +136,7 @@ function renderMarkdown(text: string): string {
   <body>
     <div class="container">
       <header>
-        <pre class="ascii-header">
-    ██████╗ ███████╗███╗   ███╗ █████╗ ███╗   ██╗██████╗ ███████╗██████╗ 
-   ██╔════╝ ██╔════╝████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝██╔══██╗
-   ██║  ███╗█████╗  ██╔████╔██║███████║██╔██╗ ██║██║  ██║█████╗  ██████╔╝
-   ██║   ██║██╔══╝  ██║╚██╔╝██║██╔══██║██║╚██╗██║██║  ██║██╔══╝  ██╔══██╗
-   ╚██████╔╝███████╗██║ ╚═╝ ██║██║  ██║██║ ╚████║██████╔╝███████╗██║  ██║
-    ╚═════╝ ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝  ╚═╝</pre></pre>
-        <p class="tagline">OpenClaw 发行版 · 开机即用的智能助手</p>
-      </header>
+        <div class="logo">爪子星球</div>
 
       <!-- AI News Section -->
       <div class="news-section">
