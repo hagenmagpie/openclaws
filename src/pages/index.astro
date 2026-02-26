@@ -43,176 +43,192 @@ function renderMarkdown(text: string): string {
     <title>爪子星球 - OpenClaw 发行版</title>
     <meta name="description" content="爪子星球 - 极客风格的 OpenClaw 多能力集合门户" />
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
+      @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+      
+      * { margin: 0; padding: 0; box-sizing: border-box; image-rendering: pixelated; }
       body {
-        font-family: 'SF Mono', 'Fira Code', 'Monaco', monospace;
+        font-family: 'Press Start 2P', 'Courier New', monospace;
         background: #0a0a0f;
         color: #e0e0e0;
         min-height: 100vh;
+        image-rendering: pixelated;
       }
-      .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+      .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
       
-      /* Header */
+      /* Header - Pixel Style */
       header {
         text-align: center;
-        padding: 3rem 0;
-        border-bottom: 1px solid #1a1a2e;
+        padding: 2rem 0;
+        border-bottom: 4px solid #1a1a2e;
+        image-rendering: pixelated;
       }
-      .logo {
-        font-size: 3rem;
-        margin-bottom: 0.5rem;
+      .logo-img {
+        width: 280px;
+        height: auto;
+        image-rendering: pixelated;
       }
       .tagline {
-        color: #666;
-        font-size: 0.9rem;
+        color: #00ff88;
+        font-size: 0.5rem;
+        margin-top: 1rem;
+        text-shadow: 2px 2px 0 #006644;
       }
       
-      /* Filters */
+      /* Filters - Pixel Style */
       .filters {
         display: flex;
         gap: 1rem;
         flex-wrap: wrap;
-        margin: 2rem 0;
-        padding: 1.5rem;
+        margin: 1.5rem 0;
+        padding: 1rem;
         background: #12121a;
-        border: 1px solid #1a1a2e;
-        border-radius: 8px;
+        border: 4px solid #1a1a2e;
       }
       .filter-group {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.3rem;
       }
       .filter-group label {
-        font-size: 0.75rem;
-        color: #888;
+        font-size: 0.4rem;
+        color: #00ff88;
         text-transform: uppercase;
       }
       .filter-group select {
-        padding: 0.5rem 1rem;
+        padding: 0.5rem;
         background: #0a0a0f;
-        border: 1px solid #2a2a3e;
-        color: #e0e0e0;
-        border-radius: 4px;
+        border: 2px solid #2a2a3e;
+        color: #00ff88;
         font-family: inherit;
         cursor: pointer;
+        font-size: 0.5rem;
       }
       .filter-group select:focus {
         outline: none;
         border-color: #00ff88;
       }
       
-      /* Cards Grid */
+      /* Cards Grid - Pixel Style */
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-        gap: 1.5rem;
-        margin-top: 2rem;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
       }
       .card {
         background: #12121a;
-        border: 1px solid #1a1a2e;
-        border-radius: 8px;
-        padding: 1.5rem;
-        transition: all 0.2s;
+        border: 4px solid #1a1a2e;
+        padding: 1rem;
+        transition: all 0.1s;
       }
       .card:hover {
         border-color: #00ff88;
-        transform: translateY(-2px);
+        transform: translate(-2px, -2px);
+        box-shadow: 4px 4px 0 #00ff88;
       }
       .card-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem;
+        border-bottom: 2px solid #1a1a2e;
+        padding-bottom: 0.5rem;
       }
       .card-title {
-        font-size: 1.1rem;
+        font-size: 0.6rem;
         color: #fff;
       }
       .card-badge {
-        font-size: 0.7rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        text-transform: uppercase;
+        font-size: 0.4rem;
+        padding: 0.2rem 0.4rem;
+        border: 2px solid;
       }
-      .badge-windows { background: #0078d4; }
-      .badge-linux { background: #e95420; }
-      .badge-macos { background: #333; }
+      .badge-windows { border-color: #0078d4; color: #0078d4; }
+      .badge-linux { border-color: #e95420; color: #e95420; }
+      .badge-macos { border-color: #888; color: #888; }
       
       .card-meta {
         display: flex;
-        gap: 1rem;
-        font-size: 0.8rem;
-        color: #666;
-        margin-bottom: 1rem;
+        gap: 0.8rem;
+        font-size: 0.4rem;
+        color: #00ccff;
+        margin-bottom: 0.8rem;
       }
       .card-desc {
-        font-size: 0.9rem;
+        font-size: 0.45rem;
         color: #aaa;
-        margin-bottom: 1rem;
-        line-height: 1.5;
+        margin-bottom: 0.8rem;
+        line-height: 1.6;
       }
       .card-skills {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
+        gap: 0.3rem;
+        margin-bottom: 0.8rem;
       }
       .skill-tag {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.5rem;
-        background: #1a1a2e;
-        border-radius: 3px;
+        font-size: 0.35rem;
+        padding: 0.2rem 0.4rem;
+        border: 2px solid #00ff88;
         color: #00ff88;
       }
       .download-btn {
         display: block;
         width: 100%;
-        padding: 0.75rem;
+        padding: 0.6rem;
         background: #00ff88;
         color: #0a0a0f;
         text-align: center;
         text-decoration: none;
-        border-radius: 4px;
+        font-size: 0.5rem;
         font-weight: bold;
-        font-size: 0.9rem;
-        transition: opacity 0.2s;
+        border: none;
+        cursor: pointer;
       }
       .download-btn:hover {
-        opacity: 0.8;
+        background: #00cc66;
+        box-shadow: 0 0 10px #00ff88;
       }
       
-      /* Footer */
+      /* Footer - Pixel Style */
       footer {
         text-align: center;
-        padding: 3rem 0;
-        margin-top: 3rem;
-        border-top: 1px solid #1a1a2e;
-        color: #444;
-        font-size: 0.8rem;
+        padding: 2rem 0;
+        margin-top: 2rem;
+        border-top: 4px solid #1a1a2e;
+        color: #666;
+        font-size: 0.4rem;
       }
-      footer a { color: #00ff88; }
+      footer a { color: #00ff88; text-decoration: none; }
+      footer a:hover { color: #00ffcc; }
       
       /* Empty state */
       .empty {
         text-align: center;
-        padding: 4rem;
+        padding: 3rem;
         color: #666;
+        font-size: 0.5rem;
+        border: 4px solid #1a1a2e;
+        background: #12121a;
       }
       
-      /* AI News Section */
+      /* News Section - Pixel Style */
       .news-section {
-        margin: 2rem 0;
+        margin: 1.5rem 0;
+      }
+      .news-updated {
+        font-size: 0.35rem;
+        color: #00ccff;
       }
       .news-header {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid;
+        font-size: 0.6rem;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.3rem;
+        border-bottom: 4px solid;
+        margin-top: 1rem;
       }
       .news-header.latest {
         border-color: #00bfff;
@@ -224,85 +240,77 @@ function renderMarkdown(text: string): string {
       }
       .news-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 0.8rem;
+        margin-bottom: 1rem;
       }
       .news-card {
         background: #12121a;
-        border: 1px solid #1a1a2e;
-        border-radius: 8px;
-        padding: 1rem;
-        transition: all 0.2s;
+        border: 4px solid #1a1a2e;
+        padding: 0.8rem;
+        transition: all 0.1s;
         text-decoration: none;
         display: block;
       }
       .news-card:hover {
-        transform: translateY(-2px);
+        transform: translate(-2px, -2px);
       }
       .news-card.latest:hover {
         border-color: #00bfff;
-        box-shadow: 0 4px 12px rgba(0, 191, 255, 0.15);
+        box-shadow: 4px 4px 0 #00bfff;
       }
       .news-card.hot:hover {
         border-color: #ff6b6b;
-        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.15);
+        box-shadow: 4px 4px 0 #ff6b6b;
       }
       .news-title {
-        font-size: 0.95rem;
+        font-size: 0.45rem;
         color: #e0e0e0;
         margin-bottom: 0.5rem;
-        line-height: 1.4;
+        line-height: 1.5;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
       .news-meta {
-        font-size: 0.75rem;
+        font-size: 0.35rem;
         color: #666;
         display: flex;
         justify-content: space-between;
         align-items: center;
       }
       .news-source {
-        background: #1a1a2e;
-        padding: 0.2rem 0.5rem;
-        border-radius: 3px;
+        border: 2px solid #1a1a2e;
+        padding: 0.2rem 0.4rem;
+        color: #00ff88;
       }
       .news-time {
-        color: #888;
+        color: #00ccff;
       }
       .news-loading {
         text-align: center;
-        padding: 2rem;
+        padding: 1.5rem;
         color: #666;
-      }
-      .news-error {
-        text-align: center;
-        padding: 2rem;
-        color: #ff6b6b;
-      }
-      .news-updated {
-        font-size: 0.75rem;
-        color: #888;
+        font-size: 0.4rem;
       }
       .news-section-title {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin: 2rem 0 1rem;
+        margin: 1.5rem 0 0.8rem;
       }
       .news-section-title h2 {
-        font-size: 1.1rem;
+        font-size: 0.6rem;
         margin: 0;
+        color: #00ff88;
       }
     </style>
   </head>
   <body>
     <div class="container">
       <header>
-        <img src="/logo.svg" alt="openclaws" class="logo-img" style="width: 320px; height: auto;" />
+        <img src="/logo-pixel.svg" alt="openclaws" class="logo-img" />
         <p class="tagline">开机即用的智能助手 · 按需选择 · 快速部署</p>
       </header>
 
