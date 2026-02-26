@@ -1,5 +1,39 @@
 ---
 import { mirrors, scenarios } from '../config/mirrors';
+
+// 简单的 Markdown 渲染函数
+function renderMarkdown(text: string): string {
+  if (!text) return '';
+  
+  // 转义 HTML
+  let html = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  
+  // 代码块
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+  
+  // 行内代码
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  
+  // 标题
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  
+  // 粗体
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  
+  // 列表
+  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+  
+  // 分割线
+  html = html.replace(/^---$/gm, '<hr>');
+  
+  // 换行
+  html = html.replace(/\n\n/g, '</p><p>');
+  html = html.replace(/\n/g, '<br>');
+  
+  return '<p>' + html + '</p>';
+}
 ---
 
 <html lang="zh-CN">
@@ -166,6 +200,114 @@ import { mirrors, scenarios } from '../config/mirrors';
         padding: 4rem;
         color: #666;
       }
+      
+      /* AI News Section */
+      .news-section {
+        margin: 2rem 0;
+      }
+      .news-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid;
+      }
+      .news-header.latest {
+        border-color: #00bfff;
+        color: #00bfff;
+      }
+      .news-header.hot {
+        border-color: #ff6b6b;
+        color: #ff6b6b;
+      }
+      .news-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .news-card {
+        background: #12121a;
+        border: 1px solid #1a1a2e;
+        border-radius: 8px;
+        padding: 1rem;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: block;
+      }
+      .news-card:hover {
+        transform: translateY(-2px);
+      }
+      .news-card.latest:hover {
+        border-color: #00bfff;
+        box-shadow: 0 4px 12px rgba(0, 191, 255, 0.15);
+      }
+      .news-card.hot:hover {
+        border-color: #ff6b6b;
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.15);
+      }
+      .news-title {
+        font-size: 0.95rem;
+        color: #e0e0e0;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .news-meta {
+        font-size: 0.75rem;
+        color: #666;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .news-source {
+        background: #1a1a2e;
+        padding: 0.2rem 0.5rem;
+        border-radius: 3px;
+      }
+      .news-time {
+        color: #888;
+      }
+      .news-loading {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+      }
+      .news-error {
+        text-align: center;
+        padding: 2rem;
+        color: #ff6b6b;
+      }
+      .news-refresh {
+        display: inline-block;
+        margin-left: auto;
+        padding: 0.3rem 0.8rem;
+        font-size: 0.75rem;
+        background: transparent;
+        border: 1px solid currentColor;
+        border-radius: 4px;
+        color: inherit;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .news-refresh:hover {
+        background: rgba(255,255,255,0.1);
+      }
+      .news-section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 2rem 0 1rem;
+      }
+      .news-section-title h2 {
+        font-size: 1.1rem;
+        margin: 0;
+      }
     </style>
   </head>
   <body>
@@ -174,6 +316,32 @@ import { mirrors, scenarios } from '../config/mirrors';
         <img src="/logo.svg" alt="openclaws" class="logo-img" style="width: 320px; height: auto;" />
         <p class="tagline">开机即用的智能助手 · 按需选择 · 快速部署</p>
       </header>
+
+      <!-- AI News Section -->
+      <div class="news-section">
+        <div class="news-section-title">
+          <h2>🤖 AI 资讯</h2>
+          <button class="news-refresh" onclick="loadNews()">🔄 刷新</button>
+        </div>
+        
+        <!-- Latest AI News -->
+        <div class="news-header latest">
+          <span>📰 最新 AI 消息</span>
+          <span style="font-size: 0.8rem; color: #888;">今日更新</span>
+        </div>
+        <div class="news-grid" id="latestNews">
+          <div class="news-loading">加载中...</div>
+        </div>
+        
+        <!-- Hot AI News -->
+        <div class="news-header hot">
+          <span>🔥 最热 AI 消息</span>
+          <span style="font-size: 0.8rem; color: #888;">热门排行</span>
+        </div>
+        <div class="news-grid" id="hotNews">
+          <div class="news-loading">加载中...</div>
+        </div>
+      </div>
 
       <div class="filters">
         <div class="filter-group">
@@ -294,6 +462,110 @@ import { mirrors, scenarios } from '../config/mirrors';
       osFilter.addEventListener('change', filterCards);
       archFilter.addEventListener('change', filterCards);
       scenarioFilter.addEventListener('change', filterCards);
+
+      // AI News Fetching
+      async function fetchAINews() {
+        const news = { latest: [], hot: [] };
+        
+        try {
+          // Fetch from Hacker News (AI related)
+          const hnResponse = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json');
+          const hnIds = await hnResponse.json();
+          
+          // Get top 30 stories and filter for AI-related
+          const hnPromises = hnIds.slice(0, 30).map(async (id) => {
+            const storyRes = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);
+            return storyRes.json();
+          });
+          
+          const hnStories = await Promise.all(hnPromises);
+          
+          // Filter AI-related stories
+          const aiKeywords = ['AI', 'artificial intelligence', 'OpenAI', 'GPT', 'Claude', 'Gemini', 'LLM', 'machine learning', 'deep learning', 'neural', 'ChatGPT', 'Anthropic', 'Google AI', 'Meta AI', 'Tesla', '自动驾驶', '大模型', '人工智能'];
+          
+          const aiStories = hnStories.filter((story) => {
+            if (!story || !story.title) return false;
+            const titleLower = story.title.toLowerCase();
+            return aiKeywords.some((k) => titleLower.includes(k.toLowerCase()));
+          });
+          
+          // Split into latest and hot
+          news.latest = aiStories.slice(0, 10).map((story) => ({
+            title: story.title,
+            url: story.url || `https://news.ycombinator.com/item?id=${story.id}`,
+            source: 'Hacker News',
+            time: story.time ? new Date(story.time * 1000) : new Date(),
+            score: story.score || 0
+          }));
+          
+          // Hot = top scored AI stories
+          const hotStories = [...aiStories].sort((a, b) => (b.score || 0) - (a.score || 0));
+          news.hot = hotStories.slice(0, 10).map((story) => ({
+            title: story.title,
+            url: story.url || `https://news.ycombinator.com/item?id=${story.id}`,
+            source: 'Hacker News',
+            time: story.time ? new Date(story.time * 1000) : new Date(),
+            score: story.score || 0
+          }));
+          
+        } catch (error) {
+          console.error('Failed to fetch news:', error);
+        }
+        
+        return news;
+      }
+
+      function timeAgo(date) {
+        const now = new Date();
+        const diff = now.getTime() - date.getTime();
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const days = Math.floor(hours / 24);
+        
+        if (days > 0) return `${days}天前`;
+        if (hours > 0) return `${hours}小时前`;
+        return '刚刚';
+      }
+
+      function renderNewsCard(item, type) {
+        return `
+          <a href="${item.url}" target="_blank" class="news-card ${type}">
+            <div class="news-title">${item.title}</div>
+            <div class="news-meta">
+              <span class="news-source">${item.source}</span>
+              <span class="news-time">${timeAgo(item.time)}${item.score ? ' · ' + item.score + ' ▲' : ''}</span>
+            </div>
+          </a>
+        `;
+      }
+
+      async function loadNews() {
+        const latestContainer = document.getElementById('latestNews');
+        const hotContainer = document.getElementById('hotNews');
+        
+        if (latestContainer) latestContainer.innerHTML = '<div class="news-loading">加载中...</div>';
+        if (hotContainer) hotContainer.innerHTML = '<div class="news-loading">加载中...</div>';
+        
+        const news = await fetchAINews();
+        
+        if (latestContainer) {
+          if (news.latest.length > 0) {
+            latestContainer.innerHTML = news.latest.map((item) => renderNewsCard(item, 'latest')).join('');
+          } else {
+            latestContainer.innerHTML = '<div class="news-error">暂无最新资讯</div>';
+          }
+        }
+        
+        if (hotContainer) {
+          if (news.hot.length > 0) {
+            hotContainer.innerHTML = news.hot.map((item) => renderNewsCard(item, 'hot')).join('');
+          } else {
+            hotContainer.innerHTML = '<div class="news-error">暂无热门资讯</div>';
+          }
+        }
+      }
+
+      // Load news on page load
+      loadNews();
     </script>
   </body>
 </html>
