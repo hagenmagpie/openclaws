@@ -194,7 +194,7 @@
       // AI News Loading
       async function fetchAINews() {
         try {
-          const res = await fetch('/openclaws/data/ai-news.json');
+          const res = await fetch('/data/ai-news.json');
           const data = await res.json();
           
           // Update time
@@ -251,7 +251,7 @@
       // Load search index
       async function loadSearchIndex() {
         try {
-          const res = await fetch('/openclaws/data/search-index.json');
+          const res = await fetch('/data/search-index.json');
           searchIndex = await res.json();
         } catch (e) {
           console.error('Failed to load search index:', e);
