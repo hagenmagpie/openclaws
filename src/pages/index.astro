@@ -62,7 +62,29 @@ function renderMarkdown(text: string): string {
       header { text-align: center; padding: 1rem 0; border-bottom: 1px solid #30363d; }
       .logo-img { width: 300px; height: auto; }
       .tagline { color: #8b949e; font-size: 1rem; margin-top: 0.3rem; }
-      .ascii-header { color: #238636; font-size: 0.5rem; line-height: 1.15; white-space: pre; }
+      .ascii-header { color: #238636; font-size: 0.45rem; line-height: 1.2; white-space: pre; overflow-x: auto; }
+      
+      /* Responsive */
+      @media (max-width: 768px) {
+        body { font-size: 16px; }
+        .container { padding: 0.5rem; }
+        .ascii-header { font-size: 0.28rem; }
+        .tagline { font-size: 0.85rem; }
+        .filters { flex-direction: column; gap: 0.5rem; padding: 0.6rem; }
+        .filter-group { width: 100%; }
+        .filter-group select { width: 100%; }
+        .grid { grid-template-columns: 1fr; gap: 0.6rem; }
+        .news-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+        .card-meta { flex-wrap: wrap; gap: 0.4rem; }
+        .card { padding: 0.6rem; }
+        .news-card { padding: 0.5rem; }
+        .news-title { font-size: 0.8rem; }
+        .news-section-title { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+      }
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .grid { grid-template-columns: repeat(2, 1fr); }
+        .news-grid { grid-template-columns: repeat(2, 1fr); }
+      }
       
       /* Filters */
       .filters { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0; padding: 0.8rem; background: #161b22; border: 1px solid #30363d; }
@@ -117,12 +139,13 @@ function renderMarkdown(text: string): string {
     <div class="container">
       <header>
         <pre class="ascii-header">
- ██████╗██╗   ██╗██████╗ ███████╗██████╗     ██████╗ ███████╗ ██████╗ 
-██╔════╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗    ██╔══██╗██╔════╝██╔════╝ 
-██║      ╚████╔╝ ██████╔╝█████╗  ██████╔╝    ██████╔╝█████╗  ██║  ███╗
-██║       ╚██╔╝  ██╔══██╗██╔══╝  ██╔══██╗    ██╔══██╗██╔══╝  ██║   ██║
-╚██████╗   ██║   ██████╔╝███████╗██║  ██║    ██║  ██║███████╗╚██████╔╝
- ╚═════╝   ╚═╝   ╚═════╝ ╚══════╝╚═╝  ╚═╝    ╚═╝  ╚═╝╚══════╝ ╚═════╝</pre>
+ ██████╗ ██╗      ██████╗  ██████╗ ██████╗ ██╗    ██╗███╗   ██╗
+██╔════╝ ██║     ██╔════╝ ██╔═══██╗██╔══██╗██║    ██║████╗  ██║
+██║  ███╗██║     ██║  ███╗██║   ██║██████╔╝██║ █╗ ██║██╔██╗ ██║
+██║   ██║██║     ██║   ██║██║   ██║██╔══██╗██║███╗██║██║╚██╗██║
+╚██████╔╝███████╗╚██████╔╝╚██████╔╝██║  ██║╚███╔███╔╝██║ ╚████║
+ ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═══╝
+                      .space</pre>
         <p class="tagline">OpenClaw 发行版 · 开机即用的智能助手</p>
       </header>
 
