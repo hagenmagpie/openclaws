@@ -60,12 +60,16 @@
       .news-table tr:hover { background: #fafafa; }
       .news-table tr:last-child td { border-bottom: none; }
       
-      .news-title-cell { max-width: 400px; }
-      .news-title { font-size: 0.95rem; color: #333; line-height: 1.5; }
+      .news-title-cell { }
+      .news-title { font-size: 0.95rem; color: #333; line-height: 1.5; display: block; }
       .news-desc { font-size: 0.85rem; color: #666; margin-top: 0.3rem; line-height: 1.4; }
       .news-source { font-size: 0.8rem; color: #0066cc; }
       .news-time { font-size: 0.8rem; color: #999; white-space: nowrap; }
       .news-score { font-size: 0.8rem; color: #e54d2e; font-weight: 500; }
+      
+      .news-meta-row td { padding-top: 0 !important; border-bottom: 2px solid #eee !important; background: #fafafa; }
+      .news-meta-row .news-source { color: #0066cc; }
+      .news-meta-row .news-score { color: #e54d2e; }
       
       /* Search Results */
       #searchResults { display: none; }
@@ -99,14 +103,6 @@
           <span class="news-count" id="searchCount">0条</span>
         </div>
         <table class="news-table">
-          <thead>
-            <tr>
-              <th>新闻</th>
-              <th style="width:100px;">来源</th>
-              <th style="width:140px;">时间</th>
-              <th style="width:80px;">热度</th>
-            </tr>
-          </thead>
           <tbody id="searchGrid"></tbody>
         </table>
       </div>
@@ -118,16 +114,8 @@
           <span class="news-count">20条</span>
         </div>
         <table class="news-table">
-          <thead>
-            <tr>
-              <th>新闻</th>
-              <th style="width:100px;">来源</th>
-              <th style="width:140px;">时间</th>
-              <th style="width:80px;">热度</th>
-            </tr>
-          </thead>
           <tbody id="latestNews">
-            <tr><td colspan="4" class="loading">加载中...</td></tr>
+            <tr><td class="loading">加载中...</td></tr>
           </tbody>
         </table>
       </div>
@@ -139,16 +127,8 @@
           <span class="news-count">20条</span>
         </div>
         <table class="news-table">
-          <thead>
-            <tr>
-              <th>新闻</th>
-              <th style="width:100px;">来源</th>
-              <th style="width:140px;">时间</th>
-              <th style="width:80px;">热度</th>
-            </tr>
-          </thead>
           <tbody id="hotNews">
-            <tr><td colspan="4" class="loading">加载中...</td></tr>
+            <tr><td class="loading">加载中...</td></tr>
           </tbody>
         </table>
       </div>
@@ -174,6 +154,13 @@
             <td><span class="news-source">${item.source}</span></td>
             <td><span class="news-time">${formatTime(item.time)}</span></td>
             <td>${item.score ? `<span class="news-score">▲${item.score}</span>` : '-'}</td>
+          </tr>
+          <tr class="news-meta-row">
+            <td colspan="4">
+              <span class="news-source">${item.source}</span> · 
+              <span class="news-time">${formatTime(item.time)}</span>
+              ${item.score ? ` · <span class="news-score\">▲${item.score}</span>` : ''}
+            </td>
           </tr>
         `;
       }
