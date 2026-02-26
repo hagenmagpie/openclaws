@@ -30,6 +30,29 @@
       .tagline { color: #666; font-size: 0.6rem; }
       .updated { color: #888; font-size: 0.5rem; margin-top: 0.3rem; }
       
+      /* Search Box */
+      .search-box { display: flex; gap: 0.5rem; margin-top: 1rem; justify-content: center; }
+      .search-box input { 
+        padding: 0.5rem; 
+        background: #12121a; 
+        border: 4px solid #1a1a2e; 
+        color: #e0e0e0; 
+        font-family: inherit;
+        font-size: 0.6rem;
+        width: 200px;
+      }
+      .search-box input:focus { outline: none; border-color: #00ff88; }
+      .search-box button {
+        padding: 0.5rem 1rem;
+        background: #00ff88;
+        color: #0a0a0f;
+        border: none;
+        font-family: inherit;
+        font-size: 0.5rem;
+        cursor: pointer;
+      }
+      .search-box button:hover { background: #00cc6a; }
+      
       /* Responsive */
       @media (max-width: 768px) {
         body { font-size: 6px; }
@@ -123,10 +146,25 @@
         <div class="logo">爪子<span>星球</span></div>
         <p class="tagline">每日 AI 资讯 · 每天 6:00 更新</p>
         <p class="updated" id="updatedTime"></p>
+        
+        <!-- Search Box -->
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="🔍 搜索新闻..." />
+          <button id="searchBtn">搜索</button>
+        </div>
       </header>
 
+      <!-- Search Results -->
+      <div class="news-section" id="searchResults" style="display: none;">
+        <div class="news-header" style="border-color: #00ff88; color: #00ff88;">
+          <span>📊 搜索结果</span>
+          <span class="news-count" id="searchCount">0条</span>
+        </div>
+        <div class="news-grid" id="searchGrid"></div>
+      </div>
+
       <!-- Latest AI News -->
-      <div class="news-section">
+      <div class="news-section" id="latestSection">
         <div class="news-header latest">
           <span>📰 最新 AI 消息</span>
           <span class="news-count">20条</span>
@@ -137,7 +175,7 @@
       </div>
       
       <!-- Hot AI News -->
-      <div class="news-section">
+      <div class="news-section" id="hotSection">
         <div class="news-header hot">
           <span>🔥 最热 AI 消息</span>
           <span class="news-count">20条</span>
@@ -198,6 +236,79 @@
       }
       
       fetchAINews();
+      
+      // Search functionality
+      const searchInput = document.getElementById('searchInput');
+      const searchBtn = document.getElementById('searchBtn');
+      const searchResults = document.getElementById('searchResults');
+      const searchGrid = document.getElementById('searchGrid');
+      const searchCount = document.getElementById('searchCount');
+      const latestSection = document.getElementById('latestSection');
+      const hotSection = document.getElementById('hotSection');
+      
+      let searchIndex = null;
+      
+      // Load search index
+      async function loadSearchIndex() {
+        try {
+          const res = await fetch('/openclaws/data/search-index.json');
+          searchIndex = await res.json();
+        } catch (e) {
+          console.error('Failed to load search index:', e);
+        }
+      }
+      loadSearchIndex();
+      
+      function performSearch(query) {
+        if (!searchIndex || !query) {
+          searchResults.style.display = 'none';
+          latestSection.style.display = 'block';
+          hotSection.style.display = 'block';
+          return;
+        }
+        
+        const q = query.toLowerCase();
+        const results = searchIndex.news.filter(item => 
+          item.title.toLowerCase().includes(q) ||
+          (item.desc && item.desc.toLowerCase().includes(q)) ||
+          item.source.toLowerCase().includes(q)
+        ).slice(0, 50);
+        
+        searchCount.textContent = results.length + '条';
+        
+        const formatTime = (ts) => {
+          const d = new Date(ts);
+          return d.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        };
+        
+        searchGrid.innerHTML = results.map(item => `
+          <a href="${item.url}" target="_blank" class="news-card">
+            <div class="news-title">${item.title}</div>
+            ${item.desc ? `<div class="news-desc">${item.desc}</div>` : ''}
+            <div class="news-meta">
+              <span class="news-source">${item.source}</span>
+              <span class="news-time">${formatTime(item.time)}</span>
+              ${item.score ? `<span class="news-score">▲${item.score}</span>` : ''}
+            </div>
+          </a>
+        `).join('');
+        
+        latestSection.style.display = 'none';
+        hotSection.style.display = 'none';
+        searchResults.style.display = 'block';
+      }
+      
+      searchBtn.addEventListener('click', () => performSearch(searchInput.value));
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') performSearch(searchInput.value);
+      });
+      searchInput.addEventListener('input', (e) => {
+        if (!e.target.value) {
+          searchResults.style.display = 'none';
+          latestSection.style.display = 'block';
+          hotSection.style.display = 'block';
+        }
+      });
     </script>
   </body>
 </html>
